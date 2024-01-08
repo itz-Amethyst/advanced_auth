@@ -6,6 +6,7 @@ from django.conf import settings
 from Advanced_Auth.settings import env
 
 
+# Todo use pyotp package to implement expire for it also use cookie to save info in page if user forgot the otp code on email inbox it would be accessible to recover it with another api send verify email again
 def generateOTP():
     otp = ""
     for i in range(6):
