@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -6,6 +8,7 @@ from .models import User
 from .serializers import UserRegisterSerializer
 from rest_framework.response import Response
 
+from .utils.OTP import send_code_to_user
 
 
 class RegisterUserView(GenericAPIView):
@@ -17,6 +20,10 @@ class RegisterUserView(GenericAPIView):
         if serializer.is_valid(raise_exception = True):
             serializer.save()
             user: User = serializer.data
+            # To have access with dots
+            user = SimpleNamespace(**user)
+            # check
+            send_code_to_user(user.email)
             #! send email validation code
             return Response({
                 "data": user,
