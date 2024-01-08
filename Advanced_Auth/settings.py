@@ -1,5 +1,6 @@
 import environ
 from pathlib import Path
+from datetime import timedelta
 
 # Env setting up
 env = environ.Env(
@@ -89,6 +90,12 @@ DATABASES = {
 #! Auth Model
 AUTH_USER_MODEL = "account.User"
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    )
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -139,3 +146,12 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = '2525'
 EMAIL_USE_TLS = True
+
+
+# JWT config
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes = 5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days = 1),
+
+    'AUTH_HEADER_TYPES': ('Bearer',)
+}
