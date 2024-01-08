@@ -1,4 +1,3 @@
-from types import SimpleNamespace
 
 from django.shortcuts import render
 from rest_framework import status
@@ -20,14 +19,12 @@ class RegisterUserView(GenericAPIView):
         if serializer.is_valid(raise_exception = True):
             serializer.save()
             user: User = serializer.data
-            # To have access with dots
-            user = SimpleNamespace(**user)
             # check
-            send_code_to_user(user.email)
+            send_code_to_user(user['email'])
             #! send email validation code
             return Response({
                 "data": user,
-                "message": f"hi {user.username} thanks for choosing us , your verification code is"
+                "message": f"hi {user['username']} thanks for choosing us , please check your inbox for activating account"
             }, status = status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

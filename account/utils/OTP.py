@@ -2,6 +2,7 @@ import random
 from django.core.mail import EmailMessage
 
 from account.models import User, OneTimePassword
+from django.conf import settings
 from Advanced_Auth.settings import env
 
 
@@ -18,7 +19,7 @@ def send_code_to_user(email):
     user = User.objects.get(email = email)
     current_site = env("CURRENT_SITE")
     email_body = f"Hi {user.username} thanks for choosing us **{current_site} \n your OneTimePasscode is: {otp_code}"
-    from_email = env("FROM_EMAIL")
+    from_email = settings.EMAIL_HOST
     # settings.FROM_EMAIL
     OneTimePassword.objects.create(user = user, code = otp_code)
 
