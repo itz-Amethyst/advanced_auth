@@ -4,7 +4,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from .models import User, OneTimePassword
-from .serializers import UserRegisterSerializer , LoginUserSerializer , VerifyUserEmailSerializer ,PasswordResetSerializer , SetNewPasswordSerializer
+from .serializers import UserRegisterSerializer , LoginUserSerializer , VerifyUserEmailSerializer ,PasswordResetSerializer , SetNewPasswordSerializer, LogoutUserSerializer
 from rest_framework.response import Response
 
 from .utils.OTP import send_code_to_user
@@ -106,3 +106,15 @@ class SetNewPassword(GenericAPIView):
         serializer = self.serializer_class(data = request.data)
         if serializer.is_valid(raise_exception = True):
             return Response({"message": "password reset was successful"}, status = status.HTTP_200_OK)
+
+
+class LogoutUserView(GenericAPIView):
+    serializer_class = LogoutUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post( self, request ):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid(raise_exception = True):
+            serializer.save()
+            return Response(status = status.HTTP_204_NO_CONTENT)
+        return Response(serializer.error_messages, status = status.HTTP_400_BAD_REQUEST)

@@ -9,6 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.exceptions import AuthenticationFailed , NotFound
 from django.urls import reverse
 from .utils.email import send_email
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -151,3 +152,23 @@ class SetNewPasswordSerializer(serializers.ModelSerializer):
         except Exception as e:
             print(e)
             return AuthenticationFailed("link is invalid or has expired")
+
+
+class LogoutUserSerializer(serializers.ModelSerializer):
+    refresh_token = serializers.CharField()
+    default_error_messages = {
+        'bad_token': ('Token is Invalid or has expired',)
+    }
+
+    # Basically blacklist the token as logout method
+    def validate(self, attrs):
+        self.token = attrs.get('refresh_token')
+        return attrs
+
+    def save(self, **kwargs):
+        try:
+            token = RefreshToken(self.token)
+            token.blacklist()
+        except TokenError:
+            return self.fail('bad_token')
+        return super().save(**kwargs)
