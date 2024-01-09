@@ -2,7 +2,13 @@ from rest_framework import serializers
 
 from account.models import User , OneTimePassword
 from django.contrib.auth import authenticate
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import smart_str, smart_bytes
+from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.exceptions import AuthenticationFailed
+from django.urls import reverse
+from .utils.email import send_email
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -73,3 +79,28 @@ class LoginUserSerializer(serializers.ModelSerializer):
             'access_token': str(user_tokens.get("access")),
             'refresh_token': str(user_tokens.get("refresh"))
         }
+
+class PasswordResetSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length = 255)
+
+    class Meta:
+        fields = ['email']
+
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        if User.objects.filter(email = email).exists():
+            user = User.objects.get(email = email)
+            UIDbase64 = urlsafe_base64_encode(smart_bytes(user.id))
+            token = PasswordResetTokenGenerator().make_token(user)
+            request = self.context.get("request")
+            site_domain = get_current_site(request).domain
+            relative_link = reverse('password-rest-confirm', kwargs = {'UIDbase64': UIDbase64, 'token': token})
+            abslink = f"http://{site_domain}{relative_link}"
+            email_body = f"You requested password rest here is you link \n {abslink}"
+            data = {
+                'email_body': email_body,
+                'email_subject': "Rest your password",
+                'to_email': user.email
+            }
+            send_email()

@@ -5,7 +5,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from .models import User, OneTimePassword
-from .serializers import UserRegisterSerializer , LoginUserSerializer , VerifyUserEmailSerializer
+from .serializers import UserRegisterSerializer , LoginUserSerializer , VerifyUserEmailSerializer , \
+    PasswordResetSerializer
 from rest_framework.response import Response
 
 from .utils.OTP import send_code_to_user
@@ -69,3 +70,14 @@ class CheckIfLoggedIn(GenericAPIView):
 
     def get( self, request ):
         return Response({'message': "user is logged in."}, status = status.HTTP_200_OK)
+
+
+class PasswordResetView(GenericAPIView):
+    serializer_class = PasswordResetSerializer
+
+    def post( self, request ):
+        serializer = self.serializer_class(data = request.data, context = {"request": request})
+        serializer.is_valid(raise_exception = True)
+        return Response({'message': 'a link has been send to your email'}, status = status.HTTP_200_OK)
+
+
