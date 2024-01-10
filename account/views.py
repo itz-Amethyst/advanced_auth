@@ -1,16 +1,29 @@
 from django.shortcuts import redirect
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
 from .models import User, OneTimePassword
-from .serializers import UserRegisterSerializer , LoginUserSerializer , VerifyUserEmailSerializer ,PasswordResetSerializer , SetNewPasswordSerializer, LogoutUserSerializer
+from .serializers import UserRegisterSerializer , LoginUserSerializer , VerifyUserEmailSerializer , \
+    PasswordResetSerializer , SetNewPasswordSerializer , LogoutUserSerializer , UserSerializer
 from rest_framework.response import Response
 
 from .utils.OTP import send_code_to_user
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
+
+class GetUsersPagination(PageNumberPagination):
+    page_size = 8
+
+class GetUsersApiView(ListAPIView):
+    # queryset = User.objects.all().select_related("your-foreign-key")
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    pagination_class = GetUsersPagination
+
 
 
 class RegisterUserView(GenericAPIView):
