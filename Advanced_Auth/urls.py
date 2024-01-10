@@ -7,6 +7,8 @@ urlpatterns = [
 
     path("api/auth/", include("account.urls")),
 
+    path("api/external-auth/" , include("social_account.urls")) ,
+
     #! Swagger
     path('api/schema/' , SpectacularAPIView.as_view() , name = 'schema') ,
     path('api/docs/' , SpectacularSwaggerView.as_view(url_name = 'schema') , name = 'swagger-ui') ,
