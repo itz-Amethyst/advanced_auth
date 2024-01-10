@@ -169,3 +169,8 @@ SPECTACULAR_SETTINGS = {
     #? Permission
     # 'SERVE_PERMISSIONS': ['rest_framework.permissions.IsAuthenticated'],
 }
+
+# Google Setup
+GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
+SOCIAL_AUTH_PASSWORD = env("SOCIAL_AUTH_PASSWORD")
