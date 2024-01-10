@@ -11,6 +11,13 @@ from django.urls import reverse
 from .utils.email import send_email
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["auth_provider", "email", "username", "is_staff"]
+
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length = 68, min_length = 6, write_only = True)
@@ -154,7 +161,7 @@ class SetNewPasswordSerializer(serializers.ModelSerializer):
             return AuthenticationFailed("link is invalid or has expired")
 
 
-class LogoutUserSerializer(serializers.ModelSerializer):
+class LogoutUserSerializer(serializers.Serializer):
     refresh_token = serializers.CharField()
     default_error_messages = {
         'bad_token': ('Token is Invalid or has expired',)
