@@ -9,6 +9,13 @@
   export let url = ""
 </script>
 
+<style>
+  .active {
+    color: red;
+    font-weight: bold;
+  }
+</style>
+
 <!-- <Router>
   <Route path="/login" component={Login} />
   <Route path="/register" component={Register} />
@@ -17,9 +24,12 @@
 
 <Router {url}>
   <nav>
-    <Link to="/">Home</Link>
-    <Link to="/login">Login</Link>
-    <Link to="/register">Register</Link>
+    <a href="/">Home</a>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <!-- <Link to="/" cla>Home</Link> -->
+    <!-- <Link to="/login" active={location === '/login'}>Login</Link>
+    <Link to="/register" active={location === '/register'}>Register</Link> -->
   </nav>
   <div>
     <Route path="/login" component={Login} />
