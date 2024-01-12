@@ -1,10 +1,12 @@
 <script>
-// @ts-nocheck
 
   import { Router, Route, Link } from "svelte-routing";
   import Login from "./pages/Login.svelte";
   import Register from "./pages/Register.svelte";
   import ForgotPassword from "./pages/ForgotPassword.svelte";
+  import Index from "./pages/Index.svelte";
+  import Dashboard from "./pages/Dashboard.svelte";
+  import VerifyEmail from "./pages/VerifyEmail.svelte";
 
   export let url = ""
 </script>
@@ -35,5 +37,9 @@
     <Route path="/login" component={Login} />
     <Route path="/register" component={Register} />
     <Route path="/forgot-password" component={ForgotPassword} />
+    <Route path="/dashboard" component={Dashboard} />
+    <Route path="/otp/verify" component={VerifyEmail} />
   </div>
 </Router>
+
+<Index/>
