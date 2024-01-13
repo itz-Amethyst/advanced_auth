@@ -57,6 +57,16 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# CORS Section
+CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOW_CREDENTIALS=True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:8000/"
+]
+ROOT_URLCONF = 'django_rest_auth.urls'
+
+
 ROOT_URLCONF = "Advanced_Auth.urls"
 
 TEMPLATES = [
