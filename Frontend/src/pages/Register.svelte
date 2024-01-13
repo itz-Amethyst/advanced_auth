@@ -1,6 +1,8 @@
 <script>
   import { capitalize } from "../utils/helper";
-  import {showToast} from "../utils/toasthelper"
+  import { showToast } from "../utils/toasthelper";
+  import { navigate } from "svelte-routing";
+  import axios from "axios";
 
   let formdata = {
     email: "",
@@ -11,7 +13,7 @@
 
   // const { email, username, password, confirm_password } = formdata;
 
-  $:error = "";
+  $: error = "";
 
   const handleOnChange = (e) => {
     formdata = { ...formdata, [e.target.name]: e.target.value };
@@ -24,8 +26,33 @@
       return;
     }
 
+    if (formdata.password !== formdata.confirm_password) {
+      showToast("Error", "Passwords do not match", "error");
+      return;
+    }
+
     console.log(formdata);
     error = "";
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/auth/register/",
+        formdata
+      );
+      const result = response.data;
+
+      console.log(result);
+      console.log(response.status);
+
+      if (response.status === 201) {
+        navigate("/otp/verify");
+        showToast("Success", result.message, "success");
+      }
+    } catch (error) {
+      // Handle other errors
+      console.error("Error:", error.response.data);
+      showToast("Error", "An error occurred", "error");
+    }
   };
 </script>
 
