@@ -1,42 +1,72 @@
 <script>
-  let email = "";
-  let password = "";
+  import { capitalize } from "../utils/helper";
+  import {showToast} from "../utils/toasthelper"
 
-  const handleRegister = () => {
-    // Implement your registration logic here
+  let formdata = {
+    email: "",
+    username: "",
+    password: "",
+    confirm_password: "",
+  };
+
+  // const { email, username, password, confirm_password } = formdata;
+
+  $:error = "";
+
+  const handleOnChange = (e) => {
+    formdata = { ...formdata, [e.target.name]: e.target.value };
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (Object.values(formdata).some((value) => !value.trim())) {
+      showToast("Error", "Please fill in all the fields", "error");
+      return;
+    }
+
+    console.log(formdata);
+    error = "";
   };
 </script>
 
-<div class="form-container">
-  <div class="wrapper">
-    <h2>Create your account</h2>
-    <form action="post">
-      <div class="form-group">
-        <label for="">Email Address:</label>
-        <input type="text" class="email-form" name="email" />
-      </div>
-
-      <div class="form-group">
-        <label for="">Username:</label>
-        <input type="text" class="email-form" name="username" />
-      </div>
-
-      <div class="form-group">
-        <label for="">Password:</label>
-        <input type="text" class="email-form" name="password" />
-      </div>
-
-      <div class="form-group">
-        <label for="">Confirm Password:</label>
-        <input type="text" class="email-form" name="confirm_password" />
-      </div>
-
-      <input type="submit" value="Submit" class="submitButton" />
-    </form>
-    <h3 class="text-option">Or</h3>
-
-    <div class="social-container">
-
+<div>
+  <div class="form-container">
+    <div style="width: 100%;" class="wrapper">
+      <h2>create account</h2>
+      <form on:submit={handleSubmit}>
+        {#each Object.entries(formdata) as [key, value] (key)}
+          <div class="form-group">
+            <label for={key}>{capitalize(key.replace("_", " "))}: </label>
+            {#if key === "email"}
+              <input
+                type="email"
+                class="email-form"
+                name={key}
+                bind:value={formdata[key]}
+                on:input={handleOnChange}
+              />
+            {:else if key === "password" || key === "confirm_password"}
+              <input
+                type="password"
+                class="password-form"
+                name={key}
+                bind:value={formdata[key]}
+                on:input={handleOnChange}
+              />
+            {:else}
+              <input
+                type="text"
+                class="text-form"
+                name={key}
+                bind:value={formdata[key]}
+                on:input={handleOnChange}
+              />
+            {/if}
+          </div>
+        {/each}
+        <input type="submit" value="Submit" class="submitButton" />
+      </form>
+      <h3 class="text-option">Or</h3>
       <div class="githubContainer">
         <button>Sign up with Github</button>
       </div>
@@ -44,6 +74,5 @@
         <button>Sign up with Google</button>
       </div>
     </div>
-    
   </div>
 </div>
