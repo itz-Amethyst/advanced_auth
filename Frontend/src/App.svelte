@@ -8,6 +8,8 @@
   import Dashboard from "./pages/Dashboard.svelte";
   import VerifyEmail from "./pages/VerifyEmail.svelte";
 
+  import {ToastContainer, FlatToast} from "svelte-toasts"
+
   export let url = ""
 </script>
 
@@ -41,5 +43,10 @@
     <Route path="/otp/verify" component={VerifyEmail} />
   </div>
 </Router>
+
+<!-- Initialize Toast -->
+<ToastContainer let:data>
+  <FlatToast {data} />
+</ToastContainer>
 
 <Index/>
