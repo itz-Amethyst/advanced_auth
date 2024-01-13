@@ -1,6 +1,8 @@
 <script>
+  import {toasts} from 'svelte-toasts'
+  import { writable } from 'svelte/store'
   import { capitalize } from "../utils/helper";
-  import { showToast } from "../utils/toasthelper";
+  import { showToast, showToastInfDuration } from "../utils/toasthelper";
   import { navigate } from "svelte-routing";
   import axios from "axios";
 
@@ -11,9 +13,8 @@
     confirm_password: "",
   };
 
-  // const { email, username, password, confirm_password } = formdata;
-
-  $: error = "";
+  $: loading = writable(false);
+  $: clear = writable(false)
 
   const handleOnChange = (e) => {
     formdata = { ...formdata, [e.target.name]: e.target.value };
@@ -32,9 +33,9 @@
     }
 
     console.log(formdata);
-    error = "";
 
     try {
+      loading.set(true)
       const response = await axios.post(
         "http://127.0.0.1:8000/api/auth/register/",
         formdata
@@ -46,14 +47,26 @@
 
       if (response.status === 201) {
         navigate("/otp/verify");
-        showToast("Success", result.message, "success");
+        setTimeout(() => {
+          showToast("Success", result.message, "success");
+        }, 1000);
       }
     } catch (error) {
       // Handle other errors
       console.error("Error:", error.response.data);
       showToast("Error", "An error occurred", "error");
     }
+    loading.set(false)
+    clear.set(true)
   };
+
+  $: if ($loading && !$clear) {
+    showToastInfDuration();
+  }
+
+  $: if ($clear) {
+    toasts.clearAll()
+  }
 </script>
 
 <div>
