@@ -5,6 +5,7 @@
   import { showToast, showToastInfDuration } from "../utils/toasthelper";
   import { navigate } from "svelte-routing";
   import axios from "axios";
+  import { BASE_URL } from '../utils/constants';
 
   let formdata = {
     email: "",
@@ -36,10 +37,7 @@
 
     try {
       loading.set(true)
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/register/",
-        formdata
-      );
+      const response = await axios.post(`${BASE_URL}/api/auth/register/`,formdata);
       const result = response.data;
 
       console.log(result);

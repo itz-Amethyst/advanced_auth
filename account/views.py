@@ -63,7 +63,7 @@ class VerifyUserEmail(GenericAPIView):
 
                 return Response({
                     'message': f'user {user.username} already verified'
-                }, status= status.HTTP_204_NO_CONTENT)
+                }, status= status.HTTP_406_NOT_ACCEPTABLE)
 
             except OneTimePassword.DoesNotExist:
                 return Response({'message': 'passcode not provided'}, status = status.HTTP_404_NOT_FOUND)
