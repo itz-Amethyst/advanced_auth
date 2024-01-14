@@ -3,6 +3,7 @@
   import { showToast } from "../utils/toasthelper";
   import axios from "axios";
   import { BASE_URL } from "../utils/constants";
+  import axiosInstanse from "../auth/axiosInstance";
 
   let logindata = {
     username: "",
@@ -13,41 +14,44 @@
     logindata = { ...logindata, [e.target.name]: e.target.value };
   };
 
-  const handleSubmit = async (e) =>{
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     if (Object.values(logindata).some((value) => !value.trim())) {
       showToast("Error", "Please fill in all the fields", "error");
       return;
     }
 
-
     if (logindata) {
       try {
-        const res = await axios.post(`${BASE_URL}/api/auth/login/`, logindata);
+        const res = await axiosInstanse.post("/api/auth/login/", logindata);
         const response = res.data;
 
         const user = {
-          'username': response.username,
-          'email': response.email
+          username: response.username,
+          email: response.email,
         };
 
         if (res.status === 200) {
-          localStorage.setItem('token', JSON.stringify(response.access_token));
-          localStorage.setItem('refresh_token', JSON.stringify(response.refresh_token));
-          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem("token", JSON.stringify(response.access_token));
+          localStorage.setItem(
+            "refresh_token",
+            JSON.stringify(response.refresh_token)
+          );
+          localStorage.setItem("user", JSON.stringify(user));
 
-          await navigate('/dashboard');
+          await navigate("/dashboard");
           showToast("Success", "login successful", "info");
         }
       } catch (error) {
-        console.error('Error:', error.response.data.detail);
-        showToast("Error!", error.response.data.detail, "error")
+        if (error.response && error.response.status === 403) {
+          showToast("Error!","Invalid credentials or email not verified","error");
+        } else {
+          showToast("Error!", error.message, "error");
+        }
       }
-     
     }
   };
-
 </script>
 
 <div class="form-container">

@@ -1,9 +1,8 @@
 <script>
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
-  import {BASE_URL} from "../utils/constants"
-  import axios from "axios";
   import { showToast } from "../utils/toasthelper";
+  import axiosInstance from '../auth/axiosInstance'
 
 
   let jwt = localStorage.getItem("token");
@@ -14,25 +13,25 @@
     if (jwt === null && !user) {
       navigate("/login");
     }
-    //  else {
-    //   fetchData();
-    // }
+     else {
+      fetchData();
+    }
   });
 
-//   const fetchData = async () => {
-//     try {
-//       const res = await axios.get(`${BASE_URL}/auth/get-something/`);
-//       console.log(res.data);
-//     } catch (error) {
-//       console.error("Error:", error);
-//     }
-//   };
+  const fetchData = async () => {
+    try {
+      const res = await axiosInstance.get("/api/auth/profile");
+      if (res.status === 200) {
+        console.log(res.data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/logout/`, {
-        refresh_token: refresh,
-      });
+      const res = await axiosInstance.post('/api/auth/logout/', {"refresh_token": refresh,});
       if (res.status === 204) {
         localStorage.removeItem("token");
         localStorage.removeItem("refresh_token");
