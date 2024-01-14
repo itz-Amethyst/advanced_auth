@@ -4,8 +4,10 @@
   import { capitalize } from "../utils/helper";
   import { showToast, showToastInfDuration } from "../utils/toasthelper";
   import { navigate } from "svelte-routing";
-  import axios from "axios";
   import { BASE_URL } from '../utils/constants';
+  import axiosInstanse from '../auth/axiosInstance';
+  import axios from 'axios';
+  import { onMount } from 'svelte';
 
   let formdata = {
     email: "",
@@ -16,6 +18,26 @@
 
   $: loading = writable(false);
   $: clear = writable(false)
+
+
+  // Google
+  const handleSigninWithGoogle = async (response) =>{
+    const payload = response.credentials
+    const server_res = await axios.post(`${BASE_URL}/api/auth`, {"access_token": payload})
+    console.log(server_res.data);
+  }
+
+  onMount(() => {
+    google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_CLIENT_ID,
+      callback: handleSigninWithGoogle,
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      { theme: "outline", size: "large", text: "continue_with", shape: "circle", width: "280" }
+    );
+  });
+
 
   const handleOnChange = (e) => {
     formdata = { ...formdata, [e.target.name]: e.target.value };
@@ -37,7 +59,7 @@
 
     try {
       loading.set(true)
-      const response = await axios.post(`${BASE_URL}/api/auth/register/`,formdata);
+      const response = await axiosInstanse.post(`${BASE_URL}/api/auth/register/`,formdata);
       const result = response.data;
 
       console.log(result);
@@ -109,7 +131,8 @@
         <button>Sign up with Github</button>
       </div>
       <div class="googleContainer">
-        <button>Sign up with Google</button>
+        <!-- <button>Sign up with Google</button> -->
+        <div id="signInDiv" class="gsignIn"></div>
       </div>
     </div>
   </div>
