@@ -1,13 +1,13 @@
 <script>
-  import {toasts} from 'svelte-toasts'
-  import { writable } from 'svelte/store'
+  import { toasts } from "svelte-toasts";
+  import { writable } from "svelte/store";
   import { capitalize } from "../utils/helper";
   import { showToast, showToastInfDuration } from "../utils/toasthelper";
   import { navigate } from "svelte-routing";
-  import { BASE_URL } from '../utils/constants';
-  import axiosInstanse from '../auth/axiosInstance';
-  import axios from 'axios';
-  import { onMount } from 'svelte';
+  import { BASE_URL } from "../utils/constants";
+  import axiosInstanse from "../auth/axiosInstance";
+  import axios from "axios";
+  import { onMount } from "svelte";
 
   let formdata = {
     email: "",
@@ -17,16 +17,30 @@
   };
 
   $: loading = writable(false);
-  $: clear = writable(false)
-
+  $: clear = writable(false);
 
   // Google
-  const handleSigninWithGoogle = async (response) =>{
-    const payload = response.credentials
-    const server_res = await axios.post(`${BASE_URL}/api/auth`, {"access_token": payload})
+  const handleSigninWithGoogle = async (response) => {
+    const payload = response.credentials;
+    const server_res = await axios.post(`${BASE_URL}/api/external-auth/google/`,{ access_token: payload });
     console.log(server_res.data);
-  }
 
+    const user = {
+      username: server_res.data.username,
+      email: server_res.data.email,
+    };
+
+    if (server_res.status === 200) {
+      localStorage.setItem("token", JSON.stringify(server_res.data.access_token));
+      localStorage.setItem("refresh_token",JSON.stringify(server_res.data.refresh_token));
+      localStorage.setItem("user", JSON.stringify(user));
+
+      await navigate("/dashboard");
+      showToast("Success", "login successful", "info");
+    }
+  };
+
+  //! Todo
   onMount(() => {
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_CLIENT_ID,
