@@ -1,8 +1,6 @@
 <script>
-  import { navigate } from "svelte-routing";
+  import { Link, navigate } from "svelte-routing";
   import { showToast } from "../utils/toasthelper";
-  import axios from "axios";
-  import { BASE_URL } from "../utils/constants";
   import axiosInstanse from "../auth/axiosInstance";
 
   let logindata = {
@@ -69,6 +67,8 @@
       </div>
 
       <input type="submit" value="Login" class="submitButton" />
+
+      <p class='pass-link'><Link to={'/forgot-password'}>forgot password</Link></p>
     </form>
     <h3 class="text-option">Or</h3>
 
@@ -77,7 +77,8 @@
         <button>Login with Github</button>
       </div>
       <div class="googleContainer">
-        <button>Login with Google</button>
+        <!-- <button>Login with Google</button> -->
+        <div id="signInDiv" class="gsignIn"></div>
       </div>
     </div>
   </div>

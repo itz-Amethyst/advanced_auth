@@ -1,9 +1,9 @@
 <script>
-  import axios from "axios";
   import {BASE_URL} from "../utils/constants"
   import { navigate } from "svelte-routing";
   import { showToast } from "../utils/toasthelper";
   import { isValidInput } from "../utils/helper";
+  import axiosInstance from "../auth/axiosInstance";
 
   let otpCode = "";
 
@@ -17,7 +17,7 @@
 
     try {
       console.log(BASE_URL);
-      const res = await axios.post(`${BASE_URL}/api/auth/verify/`, {
+      const res = await axiosInstance.post(`${BASE_URL}/api/auth/verify/`, {
         otp_code: otpCode,
       });
 
