@@ -7,6 +7,7 @@
   import Index from "./pages/Index.svelte";
   import Dashboard from "./pages/Dashboard.svelte";
   import VerifyEmail from "./pages/VerifyEmail.svelte";
+  import ResetPassword from "./pages/ResetPassword.svelte";
 
   import {ToastContainer, FlatToast} from "svelte-toasts"
 
@@ -41,6 +42,7 @@
     <Route path="/forgot-password" component={ForgotPassword} />
     <Route path="/dashboard" component={Dashboard} />
     <Route path="/otp/verify" component={VerifyEmail} />
+    <Route path="/password-reset/:uid/:token" component={ResetPassword} />
   </div>
 </Router>
 
