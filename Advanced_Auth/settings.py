@@ -64,8 +64,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:8000/"
 ]
-ROOT_URLCONF = 'django_rest_auth.urls'
-
 
 ROOT_URLCONF = "Advanced_Auth.urls"
 

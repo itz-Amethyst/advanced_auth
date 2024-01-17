@@ -174,7 +174,6 @@ class LogoutUserSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         try:
-            # Need some working
             token = RefreshToken(self.token)
             token.blacklist()
         except TokenError:
