@@ -1,7 +1,7 @@
 <script>
   import { toasts } from "svelte-toasts";
   import { writable } from "svelte/store";
-  import { capitalize } from "../utils/helper";
+  import { capitalize, checkIsFormFilled } from "../utils/helper";
   import { showToast, showToastInfDuration } from "../utils/toasthelper";
   import { navigate } from "svelte-routing";
   import { BASE_URL } from "../utils/constants";
@@ -21,26 +21,34 @@
 
   // Google
   const handleSigninWithGoogle = async (response) => {
-    const payload = response.credentials;
-    const server_res = await axios.post(`${BASE_URL}/api/external-auth/google/`,{ access_token: payload });
-    console.log(server_res.data);
+    try{
 
-    const user = {
-      username: server_res.data.username,
-      email: server_res.data.email,
-    };
+      const payload = response.credential;
+      const server_res = await axios.post(`${BASE_URL}/api/external-auth/google/`,{ access_token: payload });
+      console.log(server_res.data);
 
-    if (server_res.status === 200) {
-      localStorage.setItem("token", JSON.stringify(server_res.data.access_token));
-      localStorage.setItem("refresh_token",JSON.stringify(server_res.data.refresh_token));
-      localStorage.setItem("user", JSON.stringify(user));
+      const user = {
+        username: server_res.data.username,
+        email: server_res.data.email,
+      };
 
-      await navigate("/dashboard");
-      showToast("Success", "login successful", "info");
+      if (server_res.status === 200) {
+        localStorage.setItem("token", JSON.stringify(server_res.data.access_token));
+        localStorage.setItem("refresh_token",JSON.stringify(server_res.data.refresh_token));
+        localStorage.setItem("user", JSON.stringify(user));
+
+        await navigate("/dashboard");
+        showToast("Success", "login successful", "info");
+      }
     }
+    catch (error){
+      console.log(error.response.data);
+      showToast("Error", error.response.data.detail, "error")
+    }
+   
   };
 
-  //! Todo
+
   onMount(() => {
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_CLIENT_ID,
@@ -59,7 +67,7 @@
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (Object.values(formdata).some((value) => !value.trim())) {
+    if (!checkIsFormFilled(formdata)) {
       showToast("Error", "Please fill in all the fields", "error");
       return;
     }
@@ -87,8 +95,8 @@
       }
     } catch (error) {
       // Handle other errors
-      console.error("Error:", error.response.data);
-      showToast("Error", "An error occurred", "error");
+      console.log(error.response.data.detail);
+      showToast("Error", error.response.data.detail, "error")
     }
     loading.set(false)
     clear.set(true)
@@ -123,6 +131,7 @@
               <input
                 type="password"
                 class="password-form"
+                minlength=6
                 name={key}
                 bind:value={formdata[key]}
                 on:input={handleOnChange}
