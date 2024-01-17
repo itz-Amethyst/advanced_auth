@@ -29,7 +29,8 @@
       }
 
     } catch (error) {
-      showToast("Error", error.response.data.message, "error");
+      console.log(error.response.data.detail);
+      showToast("Error", error.response.data.detail, "error")
     }
   };
 </script>

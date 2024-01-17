@@ -7,3 +7,7 @@ export function isValidInput(input) {
     const parsedInput = parseInt(input, 10);
     return !isNaN(parsedInput) && parsedInput > 0 && Number.isInteger(parsedInput);
   };
+
+export function checkIsFormFilled(formdata) {
+    return Object.values(formdata).every((value) => value.trim() !== "");
+}

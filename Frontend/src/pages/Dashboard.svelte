@@ -40,8 +40,8 @@
         showToast("Info", "Logged out successfully", "info")
       }
     } catch (error) {
-      console.error("Error:", error);
-      showToast("Error", "something went wrong", "error")
+      console.log(error.response.data.detail);
+      showToast("Error", error.response.data.detail, "error")
     }
   };
 </script>
