@@ -2,11 +2,60 @@
   import { Link, navigate } from "svelte-routing";
   import { showToast } from "../utils/toasthelper";
   import axiosInstanse from "../auth/axiosInstance";
+  import {checkIsFormFilled} from "../utils/helper"
+  import { onMount } from "svelte";
+  import axios from "axios";
+  import { BASE_URL } from "../utils/constants";
 
   let logindata = {
     username: "",
     password: "",
   };
+
+
+  
+  // Google
+  const handleSigninWithGoogle = async (response) => {
+    try{
+
+      const payload = response.credential;
+      const server_res = await axios.post(`${BASE_URL}/api/external-auth/google/`,{ access_token: payload });
+      console.log(server_res.data);
+
+      const user = {
+        username: server_res.data.username,
+        email: server_res.data.email,
+      };
+
+      if (server_res.status === 200) {
+        localStorage.setItem("token", JSON.stringify(server_res.data.access_token));
+        localStorage.setItem("refresh_token",JSON.stringify(server_res.data.refresh_token));
+        localStorage.setItem("user", JSON.stringify(user));
+
+        await navigate("/dashboard");
+        showToast("Success", "login successful", "info");
+      }
+    }
+    catch (error){
+      console.log(error.response.data);
+      showToast("Error", error.response.data.detail, "error")
+    }
+   
+  };
+
+
+  onMount(() => {
+    google.accounts.id.initialize({
+      client_id: "614714357603-3fqkav8io8506kikkiuou7qco3gefk8e.apps.googleusercontent.com",
+      callback: handleSigninWithGoogle,
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      { theme: "outline", size: "large", text: "continue_with", shape: "circle", width: "280" }
+    );
+  });
+
+
 
   const handleOnchange = (e) => {
     logindata = { ...logindata, [e.target.name]: e.target.value };
@@ -15,7 +64,7 @@
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (Object.values(logindata).some((value) => !value.trim())) {
+    if (!checkIsFormFilled(logindata)) {
       showToast("Error", "Please fill in all the fields", "error");
       return;
     }
@@ -42,11 +91,8 @@
           showToast("Success", "login successful", "info");
         }
       } catch (error) {
-        if (error.response && error.response.status === 403) {
-          showToast("Error!","Invalid credentials or email not verified","error");
-        } else {
-          showToast("Error!", error.message, "error");
-        }
+        console.log(error.response.data.detail);
+        showToast("Error", error.response.data.detail, "error")
       }
     }
   };
@@ -63,7 +109,7 @@
 
       <div class="form-group">
         <label for="">Password:</label>
-        <input type="text" class="email-form" name="password" bind:value={logindata.password} on:change={handleOnchange}/>
+        <input type="password" class="email-form" name="password" bind:value={logindata.password} on:change={handleOnchange}/>
       </div>
 
       <input type="submit" value="Login" class="submitButton" />
@@ -74,7 +120,7 @@
 
     <div class="social-container">
       <div class="githubContainer">
-        <button>Login with Github</button>
+        <button>Continue with Github</button>
       </div>
       <div class="googleContainer">
         <!-- <button>Login with Google</button> -->
