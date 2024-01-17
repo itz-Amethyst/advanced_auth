@@ -21,7 +21,11 @@ class GoogleAuthSerializer(serializers.Serializer):
             raise AuthenticationFailed(detail = "Could not verify the user")
 
         email = google_user_data['email']
-        username = f"{google_user_data['given_name']}_{google_user_data['family_name']}"
+        username = f"{google_user_data['given_name']}"
+        # Conditionally append family name with an underscore if it's not empty
+        family_name = google_user_data.get('family_name' , '')
+        if family_name:
+            username += f"_{family_name}"
         provider = "google"
 
-        return register_social_user(provider, email, username)
+        return register_social_user(provider, email, username, request)
