@@ -1,5 +1,5 @@
 from rest_framework.generics import GenericAPIView
-from .serializers import GoogleAuthSerializer
+from .serializers import GoogleAuthSerializer, GithubOauthSerializer
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -17,3 +17,15 @@ class GoogleAuthView(GenericAPIView):
 
         return Response(serializer.errors, status = status.HTTP_406_NOT_ACCEPTABLE)
 
+
+class GithubSignInView(GenericAPIView):
+    serializer_class = GithubOauthSerializer
+
+    def post( self, request ):
+        print(request.data)
+        serializer = self.serializer_class(data = request.data, context = {"request": request})
+        if serializer.is_valid(raise_exception = True):
+            data = (serializer.validated_data['code'])
+            return Response(data, status = status.HTTP_200_OK)
+
+        return Response(data=serializer.errors, status = status.HTTP_406_NOT_ACCEPTABLE)
