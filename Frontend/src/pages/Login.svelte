@@ -1,17 +1,23 @@
 <script>
   import { Link, navigate } from "svelte-routing";
-  import { showToast } from "../utils/toasthelper";
+  import { showToast, showToastInfDuration } from "../utils/toasthelper";
   import axiosInstanse from "../auth/axiosInstance";
   import {checkIsFormFilled} from "../utils/helper"
   import { onMount } from "svelte";
   import axios from "axios";
   import { BASE_URL } from "../utils/constants";
+  import { writable } from "svelte/store";
+  import { toasts } from "svelte-toasts";
 
   let logindata = {
     username: "",
     password: "",
   };
 
+  $: code = new URLSearchParams(window.location.search).get('code');
+
+  $: loading = writable(false);
+  $: clear = writable(false);
 
   
   // Google
@@ -43,6 +49,49 @@
    
   };
 
+  // Github
+  const handleSigninWithGithub = () =>{
+    const code = import.meta.env.VITE_GITHUB_ID
+    window.location.assign(`https://github.com/login/oauth/authorize/?client_id=${code}`)
+  }
+
+  const send_code_to_backend_github= async () =>{
+    if (code){
+      try{
+        loading.set(true)
+        const res = await axiosInstanse.post('api/external-auth/github/', {"code": code}) 
+        const result = res.data
+        console.log(result);
+        console.log(res);
+        if (res.status === 200){
+          const user = {
+            'email': result.email,
+            'username': result.username
+          }
+          console.log("Hello there");
+
+          localStorage.setItem("token", JSON.stringify(result.access_token));
+          localStorage.setItem("refresh_token",JSON.stringify(result.refresh_token));
+          localStorage.setItem("user", JSON.stringify(user));
+          await navigate('/dashboard')
+          setTimeout(() => {
+            showToast("Success", result.message, "info");
+          }, 1000);
+
+        }
+      }
+      catch (error){
+        console.log(error.response);
+        setTimeout(() => {
+          showToast("Error", error.response.data.code[0], "error")
+        }, 1000);
+      }
+    }
+    loading.set(false)
+    clear.set(true)
+  }
+
+
 
   onMount(() => {
     google.accounts.id.initialize({
@@ -53,6 +102,9 @@
       document.getElementById("signInDiv"),
       { theme: "outline", size: "large", text: "continue_with", shape: "circle", width: "280" }
     );
+
+    // Github
+    send_code_to_backend_github()
   });
 
 
@@ -96,6 +148,14 @@
       }
     }
   };
+
+  $: if ($loading && !$clear) {
+    showToastInfDuration();
+  }
+
+  $: if ($clear) {
+    toasts.clearAll()
+  }
 </script>
 
 <div class="form-container">
@@ -120,7 +180,7 @@
 
     <div class="social-container">
       <div class="githubContainer">
-        <button>Continue with Github</button>
+        <button on:click={handleSigninWithGithub}>Continue with Github</button>
       </div>
       <div class="googleContainer">
         <!-- <button>Login with Google</button> -->
