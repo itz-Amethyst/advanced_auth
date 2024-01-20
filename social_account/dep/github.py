@@ -25,6 +25,7 @@ class Github:
                 "Authorization": f"Bearer {access_token}"
             }
 
+            # All your Github information
             response = requests.get("https://api.github.com/user", headers=headers)
             user_data = response.json()
             return user_data

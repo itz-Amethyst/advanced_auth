@@ -46,10 +46,11 @@ class GithubOauthSerializer(serializers.Serializer):
             user = Github.retrieve_github_user(access_token)
             full_name = user['name']
             email = user['email']
-            # Divide 
-            names = full_name.split(" ")
-            first_name = names[1]
-            last_name = names[0]
+            #! Divide
+            # names = full_name.split(" ")
+            # first_name = names[1]
+            # last_name = names[0]
+            username = user['login']
             provider = "github"
             return register_social_user(provider, email , username, request)
 

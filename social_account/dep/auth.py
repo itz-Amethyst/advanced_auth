@@ -7,13 +7,14 @@ from account.models import User
 from django.conf import settings
 from rest_framework.exceptions import AuthenticationFailed
 
-from social_account.utils.response import send_response, authenticate_without_password_and_send_response
+from social_account.utils.response import send_response , authenticate_without_password_and_send_response
 
 
 class Google:
     @staticmethod
     def validate(access_token):
         try:
+            # Needs vpn to process
             id_info = id_token.verify_oauth2_token(access_token, requests.Request() )
             if "accounts.google.com" in id_info['iss']:
                 return id_info
