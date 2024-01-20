@@ -16,6 +16,8 @@
     confirm_password: "",
   };
 
+  $: code = new URLSearchParams(window.location.search).get('code');
+
   $: loading = writable(false);
   $: clear = writable(false);
 
@@ -48,8 +50,50 @@
    
   };
 
+  const handleSigninWithGithub = () =>{
+    const code = import.meta.env.VITE_GITHUB_ID
+    window.location.assign(`https://github.com/login/oauth/authorize/?client_id=${code}`)
+  }
+
+  const send_code_to_backend_github= async () =>{
+    if (code){
+      try{
+        loading.set(true)
+        const res = await axiosInstanse.post('api/external-auth/github/', {"code": code}) 
+        const result = res.data
+        console.log(result);
+        console.log(res);
+        if (res.status === 200){
+          const user = {
+            'email': result.email,
+            'username': result.username
+          }
+          console.log("Hello there");
+
+          localStorage.setItem("token", JSON.stringify(result.access_token));
+          localStorage.setItem("refresh_token",JSON.stringify(result.refresh_token));
+          localStorage.setItem("user", JSON.stringify(user));
+          await navigate('/dashboard')
+          setTimeout(() => {
+            showToast("Success", result.message, "info");
+          }, 1000);
+
+        }
+      }
+      catch (error){
+        console.log(error.response);
+        setTimeout(() => {
+          showToast("Error", error.response.data.code[0], "error")
+        }, 1000);
+      }
+    }
+    loading.set(false)
+    clear.set(true)
+  }
+
 
   onMount(() => {
+    console.log(import.meta.env.VITE_CLIENT_ID);
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_CLIENT_ID,
       callback: handleSigninWithGoogle,
@@ -58,6 +102,9 @@
       document.getElementById("signInDiv"),
       { theme: "outline", size: "large", text: "continue_with", shape: "circle", width: "280" }
     );
+
+    // Github
+    send_code_to_backend_github()
   });
 
 
@@ -96,7 +143,9 @@
     } catch (error) {
       // Handle other errors
       console.log(error.response.data.detail);
-      showToast("Error", error.response.data.detail, "error")
+      setTimeout(() => {
+        showToast("Error", error.response.data.detail, "error")
+      }, 1000);
     }
     loading.set(false)
     clear.set(true)
@@ -151,7 +200,7 @@
       </form>
       <h3 class="text-option">Or</h3>
       <div class="githubContainer">
-        <button>Sign up with Github</button>
+        <button on:click={handleSigninWithGithub}>Sign up with Github</button>
       </div>
       <div class="googleContainer">
         <!-- <button>Sign up with Google</button> -->
