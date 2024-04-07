@@ -4,17 +4,15 @@
 ⭐ Written with ``Svelte`` & Used BlackList Token for Logout  ⭐
 
 
-![Structure](https://media.discordapp.net/attachments/921633563810627588/1198308295836975104/image.png?ex=65be6e91&is=65abf991&hm=dce2ef06486a07cf960b8a00aa5f0331632d332a57bdddc64107c415134df8c8&=&format=webp&quality=lossless&width=243&height=567)
-
 ### Login page
 
-![Login_Page](https://media.discordapp.net/attachments/921633563810627588/1198308441064751115/image.png?ex=65be6eb3&is=65abf9b3&hm=4022beba2891750d56f31751952e37858582c6de94dc62b125b3a0f7aa53ac11&=&format=webp&quality=lossless&width=580&height=589)
+![Login_Page](https://cdn.discordapp.com/attachments/1113510096622862375/1226604892093812786/image.png?ex=66255fd3&is=6612ead3&hm=59593817f78201469d253d5ad38b4a68b08f489ba22e147cbe00ca1b24f25272&)
 
 ### Github Gateway
 
-![Github](https://media.discordapp.net/attachments/921633563810627588/1198310413968871645/image.png?ex=65be708a&is=65abfb8a&hm=e97677b618c86b8261568a982c3acc60e79902dda390b7d3964a07058b40ff46&=&format=webp&quality=lossless&width=558&height=589)
+![Github](https://cdn.discordapp.com/attachments/1113510096622862375/1226608559597293679/image.png?ex=6625633d&is=6612ee3d&hm=3e9631a6986a546a4fbc91aafc4853f7cf044f144e3d41a9e99ed654d9969b01&)
 
 ### JWT
 
-![Token](https://media.discordapp.net/attachments/921633563810627588/1198309802405797968/image.png?ex=65be6ff8&is=65abfaf8&hm=aa01b88368e5abccc7338f6f9a3c43814a4033e09cbbc213954e9194c6724edb&=&format=webp&quality=lossless&width=1440&height=507)
+![Token](https://cdn.discordapp.com/attachments/1113510096622862375/1226606658243793027/image.png?ex=66256178&is=6612ec78&hm=bbfc1f9c42b57ac67deb179cbc23a08e48bbe52ee82bb11856bea423c7414e33&)
 
