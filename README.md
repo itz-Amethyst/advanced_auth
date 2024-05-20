@@ -6,13 +6,13 @@
 
 ### Login page
 
-![Login_Page](https://cdn.discordapp.com/attachments/1113510096622862375/1226604892093812786/image.png?ex=66255fd3&is=6612ead3&hm=59593817f78201469d253d5ad38b4a68b08f489ba22e147cbe00ca1b24f25272&)
+![Login_Page](https://cdn.discordapp.com/attachments/1113510096622862375/1226604892093812786/image.png?ex=664c4413&is=664af293&hm=5868eaa4f303571edaee88aa3cc4e9ea17bf1ebdf780d45243d90423b69a7d3a&)
 
 ### Github Gateway
 
-![Github](https://cdn.discordapp.com/attachments/1113510096622862375/1226608559597293679/image.png?ex=6625633d&is=6612ee3d&hm=3e9631a6986a546a4fbc91aafc4853f7cf044f144e3d41a9e99ed654d9969b01&)
+![Github](https://media.discordapp.net/attachments/1113510096622862375/1226608559597293679/image.png?ex=664c477d&is=664af5fd&hm=dc644d05336a16a17c58e435cf612e82ac301d0cba7eea036ad5a275f827d1d4&=&format=webp&quality=lossless&width=1032&height=127)
 
 ### JWT
 
-![Token](https://cdn.discordapp.com/attachments/1113510096622862375/1226606658243793027/image.png?ex=66256178&is=6612ec78&hm=bbfc1f9c42b57ac67deb179cbc23a08e48bbe52ee82bb11856bea423c7414e33&)
+![Token](https://cdn.discordapp.com/attachments/1113510096622862375/1226606658243793027/image.png?ex=664c45b8&is=664af438&hm=dd6124f0714395621247cbe77dab3015c821fbb29269738fc2d17502f8c2b3b2&)
 
